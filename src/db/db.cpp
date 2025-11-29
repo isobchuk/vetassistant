@@ -1,0 +1,4 @@
+bool db()
+{
+    return true;
+}
