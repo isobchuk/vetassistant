@@ -15,7 +15,6 @@ SOURCES 	:= $(notdir $(wildcard ./*.cpp) $(wildcard ./*.c))
 OBJECTS 	:= $(SOURCES:.cpp=.o)
 OBJECTS 	:= $(addprefix $(OBJ_FOLDER)/, $(OBJECTS:.c=.o))
 
-MOC = moc
 MOC_HEADERS := $(shell grep -l '\<Q_OBJECT\>' *.hpp)
 MOC_SOURCES := $(addprefix $(OBJ_FOLDER)/, $(MOC_HEADERS:.hpp=.moc.cpp))
 MOC_OBJS := $(MOC_SOURCES:.moc.cpp=.moc.o)
