@@ -1,4 +1,4 @@
-include $(ROOT)build/log.mk
+include $(ROOT)log.mk
 
 DIR 		:= $(notdir $(CURDIR))
 FULL_DIR	:= $(PRE_DIR)/$(DIR)
@@ -15,6 +15,10 @@ SOURCES 	:= $(notdir $(wildcard ./*.cpp) $(wildcard ./*.c))
 OBJECTS 	:= $(SOURCES:.cpp=.o)
 OBJECTS 	:= $(addprefix $(OBJ_FOLDER)/, $(OBJECTS:.c=.o))
 
+MOC = moc
+MOC_HEADERS := $(shell grep -l '\<Q_OBJECT\>' *.hpp)
+MOC_SOURCES := $(addprefix $(OBJ_FOLDER)/, $(MOC_HEADERS:.hpp=.moc.cpp))
+MOC_OBJS := $(MOC_SOURCES:.moc.cpp=.moc.o)
 
 PWD := $(shell pwd)
 PACKAGE		:= $(QT_CFLAGS)
@@ -27,15 +31,15 @@ FLAGS += -pipe -D_REENTRANT -fPIC
 
 all: $(DIRS) $(OBJ_FOLDER) $(LIB_FOLDER) $(TARGET)
 
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJECTS) $(MOC_OBJS)
 	@$(LOG_AR)
 	$(AR) rcs $@ $^
-	@echo $(wildcard $(OBJECTS:.o=.d))
 	
 $(DIRS):
 	$(MAKE) -C $@ ROOT=../$(ROOT) PRE_DIR=$(FULL_DIR)  $(MAKECMDGOALS)
 
 $(OBJ_FOLDER)/%.o: %.cpp
+	@echo $(MOC_OBJS)
 	@$(LOG_CXX)
 	$(CXX) $(FLAGS) $(CXXFLAGS) $(WARNINGS) $(WARNINGS_CPP) $(PACKAGE) -MMD -c $< -o $@
 
@@ -48,6 +52,14 @@ $(OBJ_FOLDER):
 
 $(LIB_FOLDER):
 	$(shell mkdir -p $(LIB_FOLDER))
+
+$(OBJ_FOLDER)/%.moc.cpp: %.hpp
+	@$(LOG_MOC)
+	$(MOC) $< -o $@
+
+$(OBJ_FOLDER)/%.moc.o: $(OBJ_FOLDER)/%.moc.cpp
+	@$(LOG_CXX)
+	$(CXX) $(FLAGS) $(CXXFLAGS) $(WARNINGS) $(WARNINGS_CPP) $(PACKAGE) -MMD -c $< -o $@
 
 include $(wildcard $(OBJECTS:.o=.d))
 

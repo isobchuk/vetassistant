@@ -1,4 +1,4 @@
-include $(ROOT)build/log.mk
+include $(ROOT)log.mk
 
 DIR 		:= $(notdir $(CURDIR))
 FULL_DIR	:= $(PRE_DIR)/$(DIR)
@@ -15,7 +15,6 @@ SOURCES 	:= $(notdir $(wildcard ./*.cpp) $(wildcard ./*.c))
 OBJECTS 	:= $(SOURCES:.cpp=.o)
 OBJECTS 	:= $(addprefix $(OBJ_FOLDER)/, $(OBJECTS:.c=.o))
 
-
 .PHONY: all clean $(DIRS)
 
 all: $(DIRS) $(OBJ_FOLDER) $(LIB_FOLDER) $(TARGET)
@@ -23,7 +22,6 @@ all: $(DIRS) $(OBJ_FOLDER) $(LIB_FOLDER) $(TARGET)
 $(TARGET): $(OBJECTS)
 	@$(LOG_AR)
 	$(AR) rcs $@ $^
-	@echo $(wildcard $(OBJECTS:.o=.d))
 	
 $(DIRS):
 	$(MAKE) -C $@ ROOT=../$(ROOT) PRE_DIR=$(FULL_DIR) $(MAKECMDGOALS)

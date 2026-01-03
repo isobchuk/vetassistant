@@ -40,25 +40,28 @@ WARNINGS_CPP 	= -Wctor-dtor-privacy -Woverloaded-virtual -Wsign-promo -Wzero-as-
 
 DIRS := src
 GLOBAL_INCLUDE := $(CURDIR)/src
+ISO			   := $(CURDIR)
 
 # QT stuff
 QT_CFLAGS := $(shell pkg-config --cflags Qt5Core Qt5Gui Qt5Qml Qt5Quick Qt5QmlModels Qt5Network)
 QT_LIBS   := $(shell pkg-config --libs Qt5Core Qt5Gui Qt5Qml Qt5Quick Qt5QmlModels Qt5Network)
 
+# Sqlite3 libs
+SQLITE3_LIBS := $(shell pkg-config --libs sqlite3)
 
 # Compilation flags and linker script
-FLAGS		= $(OPTIMIZE) $(DEFINES) -I$(GLOBAL_INCLUDE)
+FLAGS		= $(OPTIMIZE) $(DEFINES) -I$(GLOBAL_INCLUDE) -I$(ISO)
 CFLAGS		=
 CXXFLAGS 	= -std=c++20 -fconcepts-diagnostics-depth=5
 LDFLAGS		?=
-LIBS		= $(QT_LIBS)
+LIBS		= $(QT_LIBS) $(SQLITE3_LIBS)
 
 export RESULT_FOLDER_NAME CONFIGURATION BIN_FOLDER_NAME LIB_FOLDER_NAME OBJ_FOLDER_NAME WARNINGS WARNINGS_CPP FLAGS CFLAGS CXXFLAGS LDFLAGS LIBS INCLUDES QT_CFLAGS
 
 LIB_ROOT = $(RESULT_FOLDER_NAME)/$(CONFIGURATION)/$(LIB_FOLDER_NAME)
 SUBLIBS  = $(shell find $(LIB_ROOT) -name '*.a' -type f)
 
-include $(ROOT)build/log.mk
+include $(ROOT)log.mk
 
 
 .PHONY: all clean $(DIRS)

@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/output/debug/bin/vetassistant",
-            "args": ["--qml-file", "/src/gui/qt/qml/ui.qml"],
+            "args": ["--qml-file", "/src/gui/qt/qml/ui.qml", "--db", "./resources"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

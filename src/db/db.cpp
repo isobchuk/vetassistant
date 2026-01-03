@@ -1,4 +1,0 @@
-bool db()
-{
-    return true;
-}

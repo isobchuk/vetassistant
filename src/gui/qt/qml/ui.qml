@@ -24,7 +24,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 font.capitalization: Font.AllUppercase
                 font.bold: true
-                font.pixelSize: 72
+                font.pixelSize: 0.15 * parent.height
                 wrapMode: Text.Wrap
                 color: "#003366"
             }
@@ -42,45 +42,45 @@ ApplicationWindow {
         id: mainPage
 
          Item {
-            anchors.fill: parent
 
             ListModel {
                 id: menuModel
                 ListElement { text: "Fragen" }
                 ListElement { text: "Zeitplan" }
                 ListElement { text: "Leistungen" }
-                ListElement { text: "Unsereteam" }
+                ListElement { text: "Unser team" }
                 ListElement { text: "Zurück" }
             }
 
             ListView {
-                //anchors.centerIn: parent
+                id: listViewMainPage
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 50      // ← space from the top
-                anchors.bottomMargin: 50      // ← space from the top
-                width: 800
-                height: 600
+                anchors.topMargin: 0.05 * parent.height
+                anchors.bottomMargin: 0.05 * parent.height
+                width: 0.8 * parent.width
+                height: parent.height
                 model: menuModel
                 layoutDirection: Qt.LeftToRight  // default
-                spacing: 20
+                spacing: 0.05 * parent.height
                 delegate: Button {
-                    width: 800
-                    height: 200
+                    width: listViewMainPage.width
+                    height: 0.4 * listViewMainPage.height
                     text: model.text
-                    font.pixelSize: 48
+                    font.pixelSize: 0.16 * listViewMainPage.height
                     font.bold: true
                     palette.buttonText: "white" 
                     
                     background: Rectangle {
                         color: "#003366"
-                        radius: 12
+                        radius: 0.05 * listViewMainPage.height
                     }
 
                     onClicked: {
                         if (text === "Fragen") stack.push(fragenPage)
                         else if (text === "Zeitplan") stack.push(zeitplanPage)
+                        else if (text === "Unser team") stack.push(teamPage)
                         else if (text === "Zurück") stack.pop()
                     }
                 }
@@ -221,8 +221,8 @@ ApplicationWindow {
 
             Button {
                 text: "Zurück"
-                width: 200
-                height: 60
+                width: 0.2 * parent.width
+                height: 0.2 * parent.heigth
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottomMargin: 20
@@ -238,5 +238,10 @@ ApplicationWindow {
         }
     }
 
-    
+
+    Component {
+        id: teamPage
+
+        Doctor { }
+    }  
 }
